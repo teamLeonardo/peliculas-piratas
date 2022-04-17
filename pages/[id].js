@@ -15,11 +15,10 @@ const ImgBack = styled("img")(({ theme }) => ({
     objectFit: "cover",
     filter: "blur(1ch)"
 }));
-
-export default ({ detail }) => {
+export default function MoviePeli({ detail }) {
     const { id } = useQuery()
     const { push } = useRouter()
-    const { data, error } = useQuery('movieId', () => getMovieById(id), { initialData: detail, refetchOnWindowFocus: false, refetchOnMount: false })
+    const { data } = useQuery('movieId', () => getMovieById(id), { initialData: detail, refetchOnWindowFocus: false, refetchOnMount: false })
     return <>
         <ImgBack alt={data.title} src={"https://image.tmdb.org/t/p/original" + data.backdrop_path} />
         <Container maxWidth="xl" position={"relative"} sx={{ mt: 2 }} >
@@ -103,7 +102,7 @@ export default ({ detail }) => {
                                 src={"https://www.2embed.ru/embed/tmdb/movie?id=" + data.id}
                                 width="100%"
                                 height="100%"
-                                frameborder="0"
+                                frameBorder="0"
                             ></iframe>
                         </Paper>
                     </Paper>
