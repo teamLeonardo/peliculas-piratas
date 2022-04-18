@@ -99,6 +99,7 @@ export default function MoviePeli({ detail }) {
                         }}>
                             <iframe
                                 id="iframe"
+                                allowFullScreen
                                 src={"https://www.2embed.ru/embed/tmdb/movie?id=" + data.id}
                                 width="100%"
                                 height="100%"
