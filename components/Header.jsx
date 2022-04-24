@@ -1,7 +1,20 @@
 
 import { styled, alpha } from '@mui/material/styles';
-import { AppBar, InputBase, Toolbar, Typography } from "@mui/material"
+
+import {
+    InputBase,
+    IconButton,
+    Tooltip,
+    Box,
+} from "@mui/material"
+
 import SearchIcon from '@mui/icons-material/Search';
+import CategoryIcon from '@mui/icons-material/Category';
+import FilterListIcon from '@mui/icons-material/FilterList';
+
+import LogoIcon from "assets/logo/logo-48.svg"
+import { useState } from 'react';
+import { DialogFilter } from 'components/dialogs/DialogFilter';
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -44,20 +57,40 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 export const Header = () => {
-    return <AppBar>
-        <Toolbar >
-            <Typography variant="h6" component="div">
-                Scroll to see button
-            </Typography>
-            <Search>
-                <SearchIconWrapper>
-                    <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                    placeholder="Search…"
-                    inputProps={{ 'aria-label': 'search' }}
-                />
-            </Search> 
-        </Toolbar>
-    </AppBar>
+    const [dialogFilter, setDialogFilter] = useState(false)
+    return <>
+        <Box >
+            <LogoIcon />
+        </Box>
+
+        <Search>
+            <SearchIconWrapper>
+                <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+            />
+        </Search>
+        <Box sx={{ flexGrow: 1 }} />
+
+        <Box sx={{ display: { xs: 'flex' } }}>
+            <Tooltip title="filtros de categorias">
+                <IconButton
+                    size="large"
+                    aria-label="show more"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={() => { setDialogFilter(true) }}
+                >
+                    <CategoryIcon />
+                    <FilterListIcon />
+                </IconButton>
+            </Tooltip>
+        </Box>
+        <DialogFilter
+            open={dialogFilter}
+            onClose={() => { setDialogFilter(!dialogFilter) }}
+        />
+    </>
 }

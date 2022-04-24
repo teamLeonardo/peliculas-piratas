@@ -3,10 +3,12 @@ import { useInfiniteQuery } from "react-query"
 import { getAllMovies } from "service"
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CardParrilla } from "components/Card"
+import { useSearchStore } from "context/ctx.search";
 
 export default function Home() {
   // const { data, error } = useQuery("movies", () => , {})
-
+  const { data: dataSearch } = useSearchStore()
+  console.log(dataSearch);
   const {
     data,
     error,
@@ -17,7 +19,7 @@ export default function Home() {
     status,
   } = useInfiniteQuery(
     'movies',
-    getAllMovies,
+    (res) => getAllMovies({ ...res, ...dataSearch }),
     {
       getNextPageParam: (lastPage) => lastPage.page + 1,
       refetchOnWindowFocus: false,

@@ -1,8 +1,18 @@
 import { cloneElement } from "react";
-import { AppBar, Box, Fab, Toolbar, Typography, useScrollTrigger, Zoom, InputBase, Grid, Button, ButtonGroup } from "@mui/material"
+import {
+    AppBar,
+    Box,
+    Fab,
+    Toolbar,
+    useScrollTrigger,
+    Zoom,
+    InputBase,
+} from "@mui/material"
+
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { styled, alpha } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
+
+import { Header } from "components/Header";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -104,44 +114,7 @@ export const PageLayout = (props) => {
         <ElevationScroll {...props}>
             <AppBar>
                 <Toolbar >
-                    <Grid
-                        container
-                        justifyContent="center"
-                        alignItems="center"
-                        spacing={4}
-                    >
-
-                        <Grid item xs={8}>
-                            <Search>
-                                <SearchIconWrapper>
-                                    <SearchIcon />
-                                </SearchIconWrapper>
-                                <StyledInputBase
-                                    placeholder="Search…"
-                                    inputProps={{ 'aria-label': 'search' }}
-                                />
-                            </Search>
-                        </Grid>
-                        <Grid
-                            item
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <ButtonGroup
-                                color="secondary"
-                                aria-label="medium secondary button group"
-                            >
-                                <Button variant="outlined">
-                                    Filtro
-                                </Button>
-                                <Button variant="outlined">
-                                    Orden
-                                </Button>
-                            </ButtonGroup>
-
-                        </Grid>
-                    </Grid>
-
+                    <Header />
 
                 </Toolbar>
             </AppBar>

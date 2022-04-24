@@ -95,15 +95,17 @@ export default function MoviePeli({ detail }) {
                         </Stack>
                         <Paper elevation={12} sx={{
                             width: "100%",
-                            height: "500px"
+                            aspectRatio: "16 / 9"
                         }}>
                             <iframe
                                 id="iframe"
                                 allowFullScreen
                                 src={"https://www.2embed.ru/embed/tmdb/movie?id=" + data.id}
-                                width="100%"
-                                height="100%"
                                 frameBorder="0"
+                                style={{
+                                    width: "100%",
+                                    height: "100%"
+                                }}
                             ></iframe>
                         </Paper>
                     </Paper>

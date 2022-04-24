@@ -21,11 +21,15 @@ point.interceptors.request.use((conf) => {
     return conf
 })
 
-// api
-export const getAllMovies = async ({ pageParam = 1 }) => {
-    console.log({ pageParam });
-    return (await point.get("/discover/movie", { params: { page: pageParam } || {} })).data
+// api movie
+export const getAllMovies = async (payload) => {
+    const { pageParam: page = 1, ...resto } = payload
+    return (await point.get("/discover/movie", { params: { page, ...resto } || {} })).data
 }
 export const getMovieById = async (id) => {
     return (await point.get("/movie/" + id)).data
+}
+// api gener
+export const getGenres = async () => {
+    return (await point.get("/genre/movie/list")).data?.genres
 }
