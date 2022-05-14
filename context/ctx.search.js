@@ -6,7 +6,7 @@ const CtxSearch = createContext({});
 
 export const SearchStore = (props) => {
     const [data, setData] = useState({});
-    const genersAll = useQuery("geners", getGenres)
+    const genersAll = useQuery("geners", getGenres, { staleTime: Infinity, cacheTime: 10 })
     const [loadFeach, setLoadFeach] = useState(false);
     const [errorFeach, setErrorFeach] = useState(false);
 

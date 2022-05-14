@@ -1,29 +1,23 @@
 import { Card, CardActionArea, CardContent, CardMedia, Tooltip, Typography } from "@mui/material"
-import { useRouter } from "next/router"
+import Link from "next/link"
 
 export const CardParrilla = (movie) => {
-    const { push } = useRouter()
     if (!movie.poster_path) {
         return <></>
     }
-    return <Tooltip title={movie.overview} placement="right-start">
-        <Card sx={{ maxWidth: "auto", height: "auto" }} >
-            <CardActionArea
-                style={{
-                    width: "100%",
-                    height: "100%"
-                }}
-                onClick={(e) => {
-                    e.preventDefault()
-                    push("/" + movie.id)
-                }}
-            >
+    return <Link
+        href={"/" + movie.id}
+    >
+        <Tooltip title={movie.overview} placement="right-start">
+
+            <Card sx={{ maxWidth: "auto", height: "auto", position: "relative" }} >
+
                 <CardMedia
                     component="img"
                     image={"https://image.tmdb.org/t/p/w500" + movie.poster_path}
                     alt={movie.title}
                     sx={{
-                        objectFit: " cover",
+                        objectFit: "cover",
                         height: "100%",
                     }}
                 />
@@ -40,7 +34,7 @@ export const CardParrilla = (movie) => {
                         {movie.title}
                     </Typography>
                 </CardContent>
-            </CardActionArea>
-        </Card>
-    </Tooltip>
+            </Card>
+        </Tooltip >
+    </Link>
 }

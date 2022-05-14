@@ -8,7 +8,6 @@ import { useSearchStore } from "context/ctx.search";
 export default function Home() {
   // const { data, error } = useQuery("movies", () => , {})
   const { data: dataSearch } = useSearchStore()
-  console.log(dataSearch);
   const {
     data,
     error,
@@ -62,7 +61,14 @@ export default function Home() {
       >
 
         {
-          data && data.pages && data.pages.map((page) => page?.results.map((movie, idx) => <CardParrilla {...movie} key={idx} />))
+          data
+          &&
+          data.pages
+          &&
+          data.pages.map((page) =>
+            page?.results.map((movie, idx) =>
+              <CardParrilla {...movie} key={idx} />
+            ))
         }
 
       </Container>
