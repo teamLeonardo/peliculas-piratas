@@ -29,6 +29,10 @@ export const getAllMovies = async (payload) => {
 export const getMovieById = async (id) => {
     return (await point.get("/movie/" + id)).data
 }
+export const getMovieBySearchTerm = async (term) => {
+    const params = { page: 1, query: term, include_adult: true }
+    return (await point.get("/search/movie", { params })).data
+}
 // api gener
 export const getGenres = async () => {
     return (await point.get("/genre/movie/list")).data?.genres

@@ -13,6 +13,9 @@ import {
     Paper,
     Typography,
     Grid,
+    Card,
+    CardContent,
+    CardMedia,
 } from "@mui/material"
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,6 +24,15 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 
 import LogoIcon from "assets/logo/logo-48.svg"
 import { DialogFilter } from 'components/dialogs/DialogFilter';
+import { useQuery } from 'react-query';
+import { getMovieBySearchTerm } from 'service';
+import { useDebounce } from 'use-debounce';
+import { useTheme } from '@mui/system';
+
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { useRouter } from 'next/router';
 const Component = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -35,28 +47,78 @@ const Component = styled('div')(({ theme }) => ({
         width: 'auto',
     },
 }));
+/*
+adult: false
+backdrop_path: "/stmYfCUGd8Iy6kAMBr6AmWqx8Bq.jpg"
+genre_ids: [28, 878, 35, 10751]
+id: 454626
+original_language: "en"
+original_title: "Sonic the Hedgehog"
+overview: "Sonic, el descarado erizo azul basado en la famosa serie de videojuegos de Sega, vivirá aventuras y desventuras cuando conoce a su amigo humano y policía, Tom Wachowski (James Marsden). Sonic y Tom unirán sus fuerzas para tratar de detener los planes del malvado Dr. Robotnik (Jim Carrey), que intenta atrapar a Sonic con el fin de emplear sus inmensos poderes para dominar el mundo."
+popularity: 518.541
+poster_path: "/rK25c71fYVi0Bv7RrTChK7NAQjC.jpg"
+release_date: "2020-02-12"
+title: "Sonic: La película"
+video: false
+vote_average: 7.4
+vote_count: 7946
 
+
+
+*/
+function MediaControlCard({ title, overview, poster_path, id }) {
+    const { push, replace } = useRouter();
+
+    return (
+        <Card sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }} >
+                <CardContent sx={{ flex: '1 0 auto' }}>
+                    <Typography component="div" variant="h5">
+                        {title}
+                    </Typography>
+                    <Typography
+                        variant="subtitle1"
+                        color="text.secondary"
+                        component="div"
+                        sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            width: "100px"
+                        }}>
+                        {overview}
+                    </Typography>
+                </CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
+
+                    <IconButton aria-label="play/pause" onClick={() => { replace("/" + id) }}>
+                        <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+                    </IconButton>
+
+                </Box>
+            </Box>
+            <CardMedia
+                component="img"
+                sx={{ width: 151 }}
+                image={"https://image.tmdb.org/t/p/w92" + poster_path}
+                alt={title}
+            />
+        </Card>
+    );
+}
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [open, setOpen] = useState(false)
 
+    const [value] = useDebounce(searchTerm, 1000);
+
     const searchRef = useRef(null)
 
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            if (
-                typeof searchTerm === "string" &&
-                searchTerm !== "" &&
-                searchTerm.trim() !== ""
-            ) {
-                console.log(searchTerm)
-            }
-            // Send Axios request here
-        }, 1000)
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [searchTerm])
-
+    const { data, isLoading } = useQuery(
+        ['searchTerm', value],
+        () => getMovieBySearchTerm(value),
+        { enabled: Boolean(value) }
+    )
 
     return <>
         <Popper open={open} anchorEl={searchRef.current} placement={"bottom-start"} transition>
@@ -74,36 +136,17 @@ const Search = () => {
                         }}
                     >
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Paper elevation={3} >xs=8</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=4</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=4</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3} >xs=8</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=4</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=4</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=8</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=4</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=4</Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper elevation={3}>xs=8</Paper>
-                            </Grid>
+                            {
+                                isLoading && "loading-----"
+                            }
+                            {
+                                data &&
+                                data.results &&
+                                data.results.map((d, idx) => {
+                                    return <MediaControlCard key={idx} {...d} />
+                                })
+                            }
+
                         </Grid>
                     </Paper>
                 </Fade>
@@ -119,6 +162,7 @@ const Search = () => {
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onBlur={() => setOpen(false)}
             />
         </Component>
     </>
@@ -152,12 +196,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 export const Header = () => {
     const [dialogFilter, setDialogFilter] = useState(false)
-
-
-
+    const { push } = useRouter()
     return <>
         <Box >
-            <LogoIcon />
+            <LogoIcon onClick={() => { push("/") }} />
         </Box>
 
         <Search />
